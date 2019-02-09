@@ -1,34 +1,47 @@
 language: python
-matrix:
-    include:
+#matrix:
+#    include:
 #        - python: 3.4
 #          dist: trusty
 #          sudo: false
 #        - python: 3.5
 #          dist: trusty
 #          sudo: false
-        - python: 3.6
-          dist: trusty
-          sudo: false
-          env: SECRET_KEY='-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl' DB_NAME=test_db DB_USER=test_user DB_PASS=test_db_password DB_HOST=127.0.0.1 DB_PORT=5432
-        - python: 3.7
-          dist: xenial
-          sudo: true
-          env: SECRET_KEY='-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl'
-               DB_NAME=test_db
-               DB_USER=test_user
-               DB_PASS=test_db_password
-               DB_HOST=127.0.0.1
-               DB_PORT=5432
-services:
-    - postgresql
+#        - python: 3.6
+#          dist: trusty
+#          sudo: false
+#          env: SECRET_KEY='-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl' DB_NAME=test_db DB_USER=test_user DB_PASS=test_db_password DB_HOST=127.0.0.1 DB_PORT=5432
+#        - python: 3.7
+#          dist: xenial
+#          sudo: true
+#          env: SECRET_KEY='-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl'
+#               DB_NAME=test_db
+#               DB_USER=test_user
+#               DB_PASS=test_db_password
+#               DB_HOST=127.0.0.1
+#               DB_PORT=5432
+python: 3.7
+dist: xenial
+sudo: true
+env: SECRET_KEY='-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl'
+     DB_NAME=test_db
+     DB_USER=test_user
+     DB_PASS=test_db_password
+     DB_HOST=127.0.0.1
+     DB_PORT=5433
+addons:
+    postgresql: "10"
+env:
+    global:
+        - PGHOST=$DB_HOST
+        - PGPORT=$DB_PORT
 
 # command to install dependencies
 install:
     - pip install -r requirements.txt
 before_script:
-    - psql -c "CREATE USER $DB_USER WITH CREATEDB ENCRYPTED PASSWORD '$DB_PASS';" -U postgres
-    - psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER" -U postgres
+    - psql -c "create user $DB_USER with encrypted password '$DB_PASS';" -U postgres
+    - psql -c "create database $DB_NAME with owner $DB_USER" -U postgres
     - cd src
 script:
     - python ./manage.py migrate
