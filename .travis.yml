@@ -1,22 +1,35 @@
 language: python
 matrix:
     include:
-        - python: 3.4
-          dist: trusty
-          sudo: false
-        - python: 3.5
-          dist: trusty
-          sudo: false
+#        - python: 3.4
+#          dist: trusty
+#          sudo: false
+#        - python: 3.5
+#          dist: trusty
+#          sudo: false
         - python: 3.6
           dist: trusty
           sudo: false
         - python: 3.7
           dist: xenial
           sudo: true
+services:
+    - postgresql
+env:
+    - SECRET_KEY=-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl
+    - DB_NAME=test_db
+    - DB_USER=test_user
+    - DB_PASS=test_db_password
+    - DB_HOST=127.0.0.1
+    - DB_PORT=5432
+
 # command to install dependencies
 install:
     - pip install -r requirements.txt
-before_script: cd src
+before_script:
+    - psql -c 'create user $DB_USER with encrypted password '$DB_PASS';' -U postgres
+    - psql -c 'create database $DB_NAME with owner $DB_USER' -U postgres
+    - cd src
 script:
     - python ./manage.py migrate
 #    - python ./src/manage.py collectstatic -c
