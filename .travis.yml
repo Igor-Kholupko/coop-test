@@ -18,6 +18,6 @@ install:
     - pip install -r requirements.txt
 script:
     - python ./src/manage.py migrate
-    - python ./src/manage.py collectstatic
+    - python ./src/manage.py collectstatic -c
     - python ./src/manage.py compilemessages
     - python ./src/manage.py test
