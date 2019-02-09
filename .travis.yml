@@ -1,0 +1,11 @@
+language: python
+python:
+    - "3.7.2"
+# command to install dependencies
+install:
+    - pip install -r requirements.txt
+script:
+    - python ./src/manage.py migrate
+    - python ./src/manage.py collectstatic
+    - python ./src/manage.py compilemessages
+    - python ./src/manage.py test
