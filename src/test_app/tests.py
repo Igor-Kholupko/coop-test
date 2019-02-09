@@ -30,11 +30,11 @@ class ModelsTest(TestCase):
         list(map(lambda x: x.save(), self.pizzas))
 
     def test_pkey_topping(self):
-        with self.assertRaisesMessage(IntegrityError, 'UNIQUE'):
+        with self.assertRaises(IntegrityError):
             Topping.objects.create(name='Cheese')
 
     def test_pkey_pizza(self):
-        with self.assertRaisesMessage(IntegrityError, 'UNIQUE'):
+        with self.assertRaises(IntegrityError):
             Pizza.objects.create(name='Pepperoni')
 
     def test_toppings_str(self):
