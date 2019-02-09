@@ -10,9 +10,6 @@ env:
         - DB_PORT=5432
         - secure: "paP/LQXciOALQM2f6QxixVSwUxJaxRxpwlmxAyluTKh15LGl8eZar5pK94fLsKUrcXFeWvY2FkxmYPcVtgvJgD1uUNRlNmhwKXkDNMII2rLXwXx/tqu2uhsDNkCoLmmDsOocH1SKusOzOoFpoaBfMisrrMCkhPKPht7Tu5L+gfIUD73a29idxJhXuWkzc4L9xyNb58HmP6BsrT+87hABNkCD36vRDry0UrQt6LUyQSKV6A5c79uvFRzIrTA1MTzTpclTBSmBBa0rXRt+vKtv7r/Quq8k+GsmA2v+2t2oVPOePr8kCaZeZcbissKvSG9O1NptXmFGPsLH+3MB3U8k7Cny+gnctzvNukiiOfvcZBu1YPvQh1msE4VHitFYUWJEEMiNdNGs3GZXc77Xg0OXsKq5J98ZUVi4eWoUjfHcm/bXPI0OGEN7/aWW/R7fI/xTi7FLyb4eT+GsB4RathyBIAajnjl94olGbXmmtcp1gKbhjRBUCzdm+whOLXRD6roK6jgSgmEscQSXLhxiL2HfCUs3/Xssq3ZdPvtNAlmtx2MLiKdn+gtN4Ga3ucTUaz2KJSNCfnTiHHilBOQOQw5WV8Bhl73Jw7u6MjsxaNVq6Yg1PfIOCBV0V6o5ZrBXAC29F1j8Zd9w4QQeCl6Tq9xo9OsatyMbYsHi2PSkdMbksSE="
 install:
-    - wget http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip > /dev/null
-    - unzip chromedriver_linux64.zip -d $VIRTUAL_ENV/bin/
-    - export CHROME_BIN=chromium-browser
     - pip install -r requirements.txt
 before_script:
     - psql -c "create user $DB_USER with createdb encrypted password '$DB_PASS';" -U postgres
