@@ -14,7 +14,7 @@ env:
 install:
     - pip install -r requirements.txt
 before_script:
-    - gwhere chromedriver
+    - chromedriver
     - psql -c "create user $DB_USER with createdb encrypted password '$DB_PASS';" -U postgres
     - psql -c "create database $DB_NAME with owner $DB_USER" -U postgres
     - cd src
