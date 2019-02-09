@@ -10,18 +10,13 @@ matrix:
         - python: 3.6
           dist: trusty
           sudo: false
+          env: SECRET_KEY=-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl DB_NAME=test_db DB_USER=test_user DB_PASS=test_db_password DB_HOST=127.0.0.1 DB_PORT=5432
         - python: 3.7
           dist: xenial
           sudo: true
+          env: SECRET_KEY=-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl DB_NAME=test_db DB_USER=test_user DB_PASS=test_db_password DB_HOST=127.0.0.1 DB_PORT=5432
 services:
     - postgresql
-env:
-    - SECRET_KEY=-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl
-    - DB_NAME=test_db
-    - DB_USER=test_user
-    - DB_PASS=test_db_password
-    - DB_HOST=127.0.0.1
-    - DB_PORT=5432
 
 # command to install dependencies
 install:
