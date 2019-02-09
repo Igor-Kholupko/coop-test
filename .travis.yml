@@ -42,6 +42,7 @@ addons:
 install:
     - pip install -r requirements.txt
 before_script:
+    - sudo service postgresql restart
     - psql -c "create user $DB_USER with encrypted password '$DB_PASS';" -U postgres
     - psql -c "create database $DB_NAME with owner $DB_USER" -U postgres
     - cd src
