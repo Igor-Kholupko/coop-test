@@ -4,6 +4,8 @@ dist: xenial
 sudo: true
 services:
     - postgresql
+addons:
+    chrome: stable
 env:
     global:
         - DB_HOST=127.0.0.1
@@ -18,4 +20,5 @@ before_script:
 script:
     - python ./manage.py migrate
     - python ./manage.py collectstatic -c --noinput
+#    - python ./manage.py compilemessages
     - python ./manage.py test
