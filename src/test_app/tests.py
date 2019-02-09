@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 
 from test_app.models import Pizza, Topping
 
@@ -29,9 +29,11 @@ class ModelsTest(TestCase):
         self.pizzas[2].toppings.set(self.toppings)
         list(map(lambda x: x.save(), self.pizzas))
 
-    def test_pkey(self):
+    def test_pkey_topping(self):
         with self.assertRaisesMessage(IntegrityError, 'UNIQUE'):
             Topping.objects.create(name='Cheese')
+
+    def test_pkey_pizza(self):
         with self.assertRaisesMessage(IntegrityError, 'UNIQUE'):
             Pizza.objects.create(name='Pepperoni')
 
