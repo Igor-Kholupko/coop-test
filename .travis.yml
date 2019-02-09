@@ -24,9 +24,6 @@ python: 3.7
 dist: xenial
 sudo: true
 
-addons:
-    postgresql: 11
-
 env:
     global:
         - SECRET_KEY='-h56i)_$7alf8%^b25k*f5!0i68rzjpj8ylnfnt#-264uym%wl'
@@ -37,6 +34,9 @@ env:
         - DB_PORT=5433
         - PGHOST=$DB_HOST
         - PGPORT=$DB_PORT
+
+addons:
+    postgresql: 11
 
 # command to install dependencies
 install:
