@@ -24,6 +24,6 @@ before_script:
     - cd src
 script:
     - python ./manage.py migrate
-    - python ./src/manage.py collectstatic -c --noinput
-#    - python ./src/manage.py compilemessages
+    - python ./manage.py collectstatic -c --noinput
+#    - python ./manage.py compilemessages
     - python ./manage.py test
