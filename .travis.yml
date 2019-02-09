@@ -16,8 +16,9 @@ matrix:
 # command to install dependencies
 install:
     - pip install -r requirements.txt
+before_script: cd src
 script:
-    - python ./src/manage.py migrate
+    - python ./manage.py migrate
 #    - python ./src/manage.py collectstatic -c
-    - python ./src/manage.py compilemessages
-    - python ./src/manage.py test
+#    - python ./src/manage.py compilemessages
+    - python ./manage.py test
