@@ -1,0 +1,28 @@
+<!-- templates/chat/room.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Home</title>
+</head>
+<body>
+    <div id="messages">0</div>
+</body>
+<script>
+    let receiverName = {{ receiver_name_json }};
+
+    let receiverSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + receiverName + '/'
+    );
+
+    receiverSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    receiverSocket.onmessage = function(e) {
+        let data = JSON.parse(e.data);
+        document.querySelector('#messages').innerText=data['user']
+    };
+</script>
+</html>

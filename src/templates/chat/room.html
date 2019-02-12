@@ -12,10 +12,16 @@
 </body>
 <script>
     let roomName = {{ room_name_json }};
+    let receiverName = {{ receiver_name_json }};
 
     let chatSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/chat/' + roomName + '/'
+    );
+
+    let receiverSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + receiverName + '/'
     );
 
     chatSocket.onmessage = function(e) {
@@ -40,6 +46,9 @@
         let message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
             'message': message
+        }));
+        receiverSocket.send(JSON.stringify({
+            'user': {{ user.id }}
         }));
 
         messageInputDom.value = '';
