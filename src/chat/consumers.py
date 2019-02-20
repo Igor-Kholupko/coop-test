@@ -1,18 +1,25 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+from chat.models import User, Message
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.room_name = None
         self.room_group_name = None
         self.user = None
+        self.receiver = None
+        self.receiver_notificator = None
 
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = 'chat_%s' % self.room_name
+        room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_group_name = 'chat_%s' % room_name
         self.user = self.scope['user']
+        self.receiver = User.objects.get(
+            pk=[int(i) for i in room_name.split('-') if i.isnumeric() and int(i) != self.user.pk][0]
+        )
+        self.receiver_notificator = 'notificator_%d' % self.receiver.id
 
         # Join room group
         await self.channel_layer.group_add(
@@ -23,8 +30,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'chat_message',
-                'message': "%s join the chat" % self.user
+                'type': 'chat_notification',
+                'notification': "%s join the chat" % self.user
             }
         )
 
@@ -34,8 +41,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'chat_message',
-                'message': "%s left this chat" % self.user
+                'type': 'chat_notification',
+                'notification': "%s left this chat" % self.user
             }
         )
         # Leave room group
@@ -48,24 +55,42 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        from_user = text_data_json['from']
+        to_user = text_data_json['to']
+
+        ms = Message(message=message, from_user_id=from_user, to_user_id=to_user)
+        ms.save()
 
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
+                'message_id': ms.id,
+                'from_user': from_user,
+                'to_user': to_user,
+                'time': ms.time.strftime("%H:%m")
+            }
+        )
+        await self.channel_layer.group_send(
+            self.receiver_notificator,
+            {
+                'type': 'notificator_update',
+                'user': from_user,
             }
         )
 
     # Receive message from room group
     async def chat_message(self, event):
-        message = event['message']
-
+        if self.user.id == event['to_user']:
+            Message.objects.filter(id__exact=event['message_id']).update(read=True)
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
+        await self.send(text_data=json.dumps(event))
+
+    async def chat_notification(self, event):
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps(event))
 
 
 class UserConsumer(AsyncWebsocketConsumer):
@@ -91,7 +116,6 @@ class UserConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
-        print(text_data)
         text_data_json.update({'type': 'notificator_update'})
         await self.channel_layer.group_send(
             self.notificator,
@@ -100,6 +124,4 @@ class UserConsumer(AsyncWebsocketConsumer):
 
     # Receive message from room group
     async def notificator_update(self, event):
-        print(event)
-
         await self.send(text_data=json.dumps(event))

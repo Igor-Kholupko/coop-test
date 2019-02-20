@@ -23,10 +23,13 @@ def verify_room(redirect_url=None):
         @wraps(view_func)
         def _wrapped_view(request, room_name, *args, **kwargs):
             splited_rn = room_name.split('-')
-            if len(splited_rn) \
+            splited_rn = [int(i) for i in splited_rn if i.isnumeric()]
+            if len(splited_rn) != 2 \
                     or User.objects.filter(id__in=splited_rn).count() != 2 \
                     or request.user.id not in splited_rn:
                 return HttpResponseRedirect(redirect_url)
+            splited_rn.remove(request.user.id)
+            request.receiver = User.objects.get(id=splited_rn[0])
             return view_func(request, room_name, *args, **kwargs)
         return _wrapped_view
     return decorator
