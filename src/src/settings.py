@@ -167,3 +167,4 @@ try:
     from src.local_settings import *
 except ImportError:
     pass
+print(DATABASES.get('default'))
