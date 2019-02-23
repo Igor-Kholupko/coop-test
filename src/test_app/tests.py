@@ -40,4 +40,4 @@ class ModelsTest(TestCase):
 
     def test_toppings_str(self):
         self.assertEqual('Cheese, Meat', self.pizzas[0].toppings_srt)
-        print(setting.DATABASES.get('default'))
+        print(settings.DATABASES.get('default'))
