@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.db import IntegrityError, transaction
-from django.conf import settings
 
 from test_app.models import Pizza, Topping
 
@@ -40,4 +39,3 @@ class ModelsTest(TestCase):
 
     def test_toppings_str(self):
         self.assertEqual('Cheese, Meat', self.pizzas[0].toppings_srt)
-        print(settings.DATABASES.get('default'))
