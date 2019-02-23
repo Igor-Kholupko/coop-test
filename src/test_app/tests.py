@@ -38,4 +38,4 @@ class ModelsTest(TestCase):
             Pizza.objects.create(name='Pepperoni')
 
     def test_toppings_str(self):
-        self.assertEqual('Cheese, Meat and more', self.pizzas[0].toppings_srt)
+        self.assertEqual('Cheese, Meat', self.pizzas[0].toppings_srt)
