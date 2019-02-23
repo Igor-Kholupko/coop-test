@@ -19,4 +19,19 @@ class Message(models.Model):
         related_name='received',
         related_query_name='received'
     )
-    read = models.BooleanField()
+    read = models.BooleanField(
+        default=False
+    )
+    time = models.DateTimeField(
+        auto_now_add=True,
+        editable=False
+    )
+
+    @classmethod
+    def get_chat_history(cls, user_one, user_two, depth=None):
+        if type(user_one) == User:
+            user_one = user_one.id
+        if type(user_two) == User:
+            user_two = user_two.id
+        users_id_list = [user_one, user_two]
+        return cls.objects.filter(from_user_id__in=users_id_list, to_user_id__in=users_id_list).order_by('id')
